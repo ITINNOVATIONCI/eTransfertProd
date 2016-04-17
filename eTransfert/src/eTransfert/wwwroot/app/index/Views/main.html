@@ -1,0 +1,129 @@
+﻿<div class="container">
+    <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="row margin-top-10">
+        <div class="col-md-6 col-sm-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet light ">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <i class="icon-bar-chart theme-font hide"></i>
+                        <span class="caption-subject theme-font bold uppercase">Transfert Rapide</span>
+                    </div>
+                </div>
+                <div class="portlet-body k-content">
+                    <div class="bg-danger validationErrors" ng-show="validationErrors">
+                        <ul>
+                            <li ng-repeat="error in validationErrors">{{error}}</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <label for="Title">Nom</label>
+                        <input kendo-masked-text-box ng-model="transaction.Numero" k-mask="'00-00-00-00'" style="width: 100%;" />
+                        <label for="numeric">Montant</label>
+                        <input kendo-numeric-text-box k-min="0" k-value="0" k-ng-model="transaction.Montant" k-step="100" style="width: 100%;" />
+                        <kendo-button class="k-update-button" ng-click="onValidateTransfert(kendoEvent)"><span class="k-icon k-update"></span></kendo-button>
+                    </div>
+
+                </div>
+                <style>
+                    .k-content {
+                        height: 330px;
+                    }
+                </style>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet light ">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <i class="icon-bar-chart theme-font hide"></i>
+                        <span class="caption-subject theme-font bold uppercase">Mes Contacts</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div kendo-grid="contactGrid" options="contactGridOptions">
+                    </div>
+                    <div kendo-window="win2" k-title="'Transfert Rapide'"
+                         k-width="500" k-height="300" k-visible="false"
+                         k-on-open="win2visible = true" k-on-close="win2visible = false">
+                        <div class="product-view">
+                            <label for="Title">Nom</label>
+                            <input kendo-masked-text-box ng-model="transaction.Numero" k-mask="'00-00-00-00'" style="width: 100%;" />
+                            <label for="numeric">Montant</label>
+                            <input kendo-numeric-text-box k-min="0" k-value="0" k-ng-model="transaction.Montant" k-step="100" style="width: 100%;" />
+                            <span></span>
+                            <div class="edit-buttons">
+                                <kendo-button class="k-update-button" ng-click="onValidateTransfert(kendoEvent)"><span class="k-icon k-update"></span></kendo-button>
+                                <a class="k-button k-cancel-button" href="\\#"><span class="k-icon k-cancel"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .product-view {
+                            float: left;
+                            height: 250px;
+                            box-sizing: border-box;
+                            border-top: 0;
+                            position: relative;
+                        }                           
+
+                        .edit-buttons {
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            text-align: right;
+                            padding: 5px;
+                            background-color: rgba(0,0,0,0.1);
+                        }
+
+                        span.k-invalid-msg {
+                            position: absolute;
+                            margin-left: 6px;
+                        }
+
+
+                        @media only screen and (max-width : 620px) {
+
+                            .product-view {
+                                width: 100%;
+                            }
+
+                                .product-view:nth-child(even) {
+                                    border-left-width: 1px;
+                                }
+                        }
+                    </style>
+
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet light tasks-widget">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <i class="icon-bar-chart theme-font hide"></i>
+                        <span class="caption-subject theme-font bold uppercase">Les 10 dernieres transactions</span>
+                        <span class="caption-helper"></span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="task-content">
+                        <kendo-grid options="mainGridOptions">
+                        </kendo-grid>
+                    </div>
+                    <div class="task-footer">
+                    </div>
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+</div>

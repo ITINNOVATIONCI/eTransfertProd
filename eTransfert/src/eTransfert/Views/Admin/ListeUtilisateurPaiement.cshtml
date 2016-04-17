@@ -1,0 +1,356 @@
+@model IEnumerable<eTransfert.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "ListeUtilisateur";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@*<h2>ListeUtilisateur</h2>*@
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+
+
+@section scriptsh {
+<link rel="stylesheet" type="text/css" href="/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+<link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+<link rel="stylesheet" type="text/css" href="/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />
+}
+
+@section scripts {
+
+     <!-- BEGIN PAGE LEVEL PLUGINS -->
+<script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" src="/plugins/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script type="text/javascript" src="/plugins/datatables/extensions/Scroller/js/dataTables.scroller.min.js"></script>
+<script type="text/javascript" src="/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<script src="/admin1/pages/scripts/table-advanced.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+   Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+QuickSidebar.init(); // init quick sidebar
+Demo.init(); // init demo features
+   TableAdvanced.init();
+});
+</script>
+
+
+
+    }
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        Widget settings form goes here
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn blue">Save changes</button>
+                        <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <!-- BEGIN STYLE CUSTOMIZER -->
+        <div class="theme-panel hidden-xs hidden-sm">
+            <div class="toggler">
+            </div>
+            <div class="toggler-close">
+            </div>
+            <div class="theme-options">
+                <div class="theme-option theme-colors clearfix">
+                    <span>
+                        THEME COLOR
+                    </span>
+                    <ul>
+                        <li class="color-default current tooltips" data-style="default" data-container="body" data-original-title="Default">
+                        </li>
+                        <li class="color-darkblue tooltips" data-style="darkblue" data-container="body" data-original-title="Dark Blue">
+                        </li>
+                        <li class="color-blue tooltips" data-style="blue" data-container="body" data-original-title="Blue">
+                        </li>
+                        <li class="color-grey tooltips" data-style="grey" data-container="body" data-original-title="Grey">
+                        </li>
+                        <li class="color-light tooltips" data-style="light" data-container="body" data-original-title="Light">
+                        </li>
+                        <li class="color-light2 tooltips" data-style="light2" data-container="body" data-html="true" data-original-title="Light 2">
+                        </li>
+                    </ul>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Theme Style
+                    </span>
+                    <select class="layout-style-option form-control input-sm">
+                        <option value="square" >Square corners</option>
+                        <option value="rounded" selected="selected">Rounded corners</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Layout
+                    </span>
+                    <select class="layout-option form-control input-sm">
+                        <option value="fluid" selected="selected">Fluid</option>
+                        <option value="boxed">Boxed</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Header
+                    </span>
+                    <select class="page-header-option form-control input-sm">
+                        <option value="fixed" selected="selected">Fixed</option>
+                        <option value="default">Default</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Top Menu Dropdown
+                    </span>
+                    <select class="page-header-top-dropdown-style-option form-control input-sm">
+                        <option value="light" selected="selected">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Mode
+                    </span>
+                    <select class="sidebar-option form-control input-sm">
+                        <option value="fixed">Fixed</option>
+                        <option value="default" selected="selected">Default</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Menu
+                    </span>
+                    <select class="sidebar-menu-option form-control input-sm">
+                        <option value="accordion" selected="selected">Accordion</option>
+                        <option value="hover">Hover</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Style
+                    </span>
+                    <select class="sidebar-style-option form-control input-sm">
+                        <option value="default" selected="selected">Default</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Position
+                    </span>
+                    <select class="sidebar-pos-option form-control input-sm">
+                        <option value="left" selected="selected">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Footer
+                    </span>
+                    <select class="page-footer-option form-control input-sm">
+                        <option value="fixed">Fixed</option>
+                        <option value="default" selected="selected">Default</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- END STYLE CUSTOMIZER -->
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="index-2.html">Accueil</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+            </ul>
+            <div class="page-toolbar">
+                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm btn-default" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                    <i class="icon-calendar"></i>&nbsp; <span class="thin uppercase visible-lg-inline-block"></span>&nbsp; <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+        </div>
+        <h3 class="page-title">
+            Dashboard <small>reports & statistics</small>
+        </h3>
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN DASHBOARD STATS -->
+        <div class="row">
+            <div id="listediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                @await Html.PartialAsync("_ViewListeUtilisateur");
+            </div>
+            <div id="soldediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                @await Html.PartialAsync("_ViewSoldePrincipal");
+            </div>
+            <div id="benefdiv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                @await Html.PartialAsync("_ViewBenefice");
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="dashboard-stat purple-plum">
+                    <div class="visual">
+                        <i class="fa fa-globe"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number">
+                            +89%
+                        </div>
+                        <div class="desc">
+                            Brand Popularity
+                        </div>
+                    </div>
+                    <a class="more" href="javascript:;">
+                        View more <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- END DASHBOARD STATS -->
+        <div class="clearfix">
+        </div>
+
+        <div class="clearfix">
+        </div>
+
+        @*<p style="font-size:large;">
+            <a asp-action="Create">Ajouter</a>
+        </p>*@
+
+        <div class="row">
+
+
+       
+                <!-- BEGIN SAMPLE TABLE PORTLET-->
+                
+
+                
+
+
+
+
+                <div class="col-md-12">
+                    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                    <div class="portlet box blue-hoki">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-globe"></i>Liste des utilisateurs
+                            </div>
+                            <div class="tools">
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-hover" id="sample_1">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Email)
+                                        </th>
+                                        <th>
+                                            Solde compte (unit&eacute;s)
+                                        </th>
+                                        <th>
+
+                                            @Html.DisplayNameFor(model => model.UserName)
+                                       
+
+                                        </th>
+                                        <th>
+                                            Seuil compte (unit&eacute;)
+                                        </th>
+                                        <th>
+                                           Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                          
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Email)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CompteUnite)
+                                            </td>
+                 
+
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserName)
+                                            </td>
+
+                                            
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SeuilUnite)
+                                            </td>
+
+                                            <td>
+                                                <a asp-action="PaiementTiers" asp-route-id="@item.Id">Payer</a> 
+                                                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                                            </td>
+                                        </tr>
+                                    }
+                                   
+                                   
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- END EXAMPLE TABLE PORTLET-->
+                   
+                </div>
+
+
+
+
+
+
+                <!-- END SAMPLE TABLE PORTLET-->
+           
+
+
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+</div>

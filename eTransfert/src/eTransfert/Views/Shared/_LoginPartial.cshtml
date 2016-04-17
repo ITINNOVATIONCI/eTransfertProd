@@ -1,0 +1,164 @@
+﻿@using System.Security.Claims
+
+@if (User.IsSignedIn())
+{
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu ">
+
+            
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN SOCIAL -->
+                
+                <li class="dropdown dropdown-extended dropdown-dark dropdown-notification" id="header_notification_bar">
+                   
+                    
+
+                     <ul class="social-icons">
+                         <li>
+                             <a class="social-icon-color facebook" data-original-title="facebook" href="https://www.facebook.com/ETransfert"></a>
+                         </li>
+                        
+                         <li>
+                             <a class="social-icon-color twitter" data-original-title="facebook" href="https://www.facebook.com/ETransfert"></a>
+                         </li>
+
+                        
+                             
+                            
+                        
+                            @*
+                <li>
+            <li>
+                <a href="javascript:;" data-original-title="googleplus" class="googleplus"></a>
+            </li>
+            <li>
+                <a href="javascript:;" data-original-title="linkedin" class="linkedin"></a>
+            </li>
+            <li>
+                <a href="javascript:;" data-original-title="youtube" class="youtube"></a>
+            </li>
+            <li>
+                <a href="javascript:;" data-original-title="vimeo" class="vimeo"></a>
+            </li>*@
+</ul>
+                </li>
+                <!-- END SOCIAL -->
+               
+                <li class="droddown dropdown-separator">
+                    <span class="separator"></span>
+                </li>
+               
+                
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="dropdown dropdown-user dropdown-dark">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        @*<img alt="" class="img-circle" src="/admin/layout3/img/avatar9.jpg">*@
+                        <span class="username username-hide-mobile" style="color:#1d1c1c;">Salut 
+    @User.GetUserName() -<b style="color:#0094ff">
+    @if (ViewBag.Compte <= 0)
+    {
+        <i class="icon-basket"></i>
+    }
+    else
+    {
+        <i class="icon-basket-loaded"></i>
+    }
+    Solde : @ViewBag.Compte @if (User.IsInRole("ADMIN"))
+    { <span> Solde Principal: @ViewBag.ComptePrincipal</span>}
+</b></span>
+
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+
+                                @if (User.IsInRole("ADMIN"))
+                                {
+                                    <li>
+                                        <a>
+                                            @if (ViewBag.ComptePrincipal <= 0)
+                                            {
+                                                <i class="icon-basket"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="icon-basket-loaded"></i>
+                                            }
+                                            Solde Principal : @ViewBag.ComptePrincipal
+                                        </a>
+                                    </li>
+                                }
+                                
+
+                        <li>
+                            <a>
+                                @if (ViewBag.Compte <= 0)
+                                {
+                                    <i class="icon-basket"></i>
+                                }
+                                else
+                                {
+                                    <i class="icon-basket-loaded"></i>
+                                }
+                                 Solde : @ViewBag.Compte
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Manage" asp-action="Index">
+                                <i class="icon-user"></i> Mon Compte
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Manage" asp-action="ChangePassword">
+                                <i class="icon-lock"></i> Changer Mot de Passe
+                            </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-key"></i>Se déconnecter</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+
+            
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+
+    </form>
+}
+else
+{
+
+            <!-- BEGIN TOP NAVIGATION MENU -->
+    <div class="top-menu animated slideInDown">
+        <ul class="nav navbar-nav pull-right">
+            <!-- BEGIN SOCIAL -->
+            <li class="dropdown dropdown-extended dropdown-dark dropdown-notification" id="header_notification_bar">
+                <ul class="social-icons">
+                    <li>
+                        <a href="javascript:;" data-original-title="facebook" class="facebook"></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-original-title="twitter" class="twitter"></a>
+                    </li>
+                </ul>
+            </li>
+            <!-- END SOCIAL -->
+            <li class="droddown dropdown-separator">
+                <span class="separator"></span>
+            </li>
+
+            <li><a id="registerLink" asp-controller="Account" asp-action="Register"><b>S'inscrire</b></a></li>
+            <li><a id="loginLink" asp-controller="Account" asp-action="Login"><b>Se connecter</b></a></li>
+        </ul>
+    </div>
+        <!-- END TOP NAVIGATION MENU -->
+
+    @*<ul class="nav navbar-nav navbar-right">
+            <li><a id="registerLink" asp-controller="Account" asp-action="Register">Register</a></li>
+            <li><a id="loginLink" asp-controller="Account" asp-action="Login">Log in</a></li>
+        </ul>*@
+}

@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Rechargement";
+}
+
+<p>Patientez svp pendant la redirection vers la plateforme de paiement</p>
+<form id="__PostForm" name="__PostForm" action="http://secure.sandbox.cinetpay.com" method="post">
+    @foreach (var todo in Model.data)
+    {
+        <div>
+            <input id="btn" type="hidden" name="@todo.Key" value="@todo.Value" />
+        </div>
+    }
+</form>
+
+@section Scripts {
+    <script type="text/javascript">
+    var v__PostForm = document.__PostForm;
+    v__PostForm.submit();
+    </script>
+}
+

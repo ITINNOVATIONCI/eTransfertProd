@@ -1,0 +1,65 @@
+@*@model IEnumerable<eTransfert.Models.Promotion>*@
+
+
+
+   @foreach (var item in ViewBag.liste)
+   {
+       if (item.operateur.Equals("MOOV"))
+       {
+
+        <small class="animated infinite" style="font-weight:bold; color:#151414; animation-duration: 8s; animation-name: flipOutX;">
+
+
+
+            <span class="badge badge-moov bold">@item.offre </span>
+            @item.description&nbsp;&nbsp;&nbsp;
+            * / *&nbsp;&nbsp;&nbsp;&nbsp;
+
+        </small>
+
+       }
+       if (item.operateur.Equals("MTN"))
+       {
+
+        <small class="animated infinite" style="font-weight:bold;color:#151414; animation-duration: 8s; animation-name: flipOutX;">
+
+
+
+            <span class="badge badge-mtn bold"> @item.offre </span>
+            @item.description
+            * / *
+
+        </small>
+
+       }
+
+       if (item.operateur.Equals("ORANGE"))
+       {
+
+        <small class="animated infinite" style="font-weight:bold;color:#151414; animation-duration: 8s; animation-name: flipOutX;">
+
+
+
+            <span class="badge badge-orange bold">@item.offre </span>
+            @item.description
+            * / *
+
+        </small>
+
+       }
+       if (item.operateur.Equals("INFOS"))
+       {
+
+        <small class="animated infinite" style="font-weight:bold;color:#151414; animation-duration: 8s; animation-name: flipOutX;">
+
+
+
+            <span class="badge badge-danger bold">@item.offre </span>
+            @item.description
+            * / *
+
+        </small>
+
+       }
+
+   }

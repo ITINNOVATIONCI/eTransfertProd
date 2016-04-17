@@ -1,0 +1,175 @@
+﻿@model RegisterViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewBag.Title = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - eTransfert</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="" name="description">
+    <meta content="ITI" name="author">
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css" />
+    <link href="/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link href="/admin/pages/css/login.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL SCRIPTS -->
+    <!-- BEGIN THEME STYLES -->
+    <link href="/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css" />
+    <link href="/css//plugins.css" rel="stylesheet" type="text/css" />
+    <link href="/admin/layout/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="/admin/layout/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="/admin/layout/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="/css/animate.css" rel="stylesheet" type="text/css" />
+    <!-- END THEME STYLES -->
+    <link rel="shortcut icon" href="favicon.ico" />
+
+</head>
+<!-- BEGIN BODY -->
+<body class="login">
+    <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+    <div class="menu-toggler sidebar-toggler">
+    </div>
+    <!-- END SIDEBAR TOGGLER BUTTON -->
+    <!-- BEGIN LOGO -->
+    <div class="logo">
+        <a href="/Index">
+            <img src="~/img/logo-small.png" alt="logo" class="logo-default animated infinite" style="animation-duration: 8s; animation-name: flipOutY;" />
+        </a>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN LOGIN -->
+    <div class="content" style="margin-top:-5px;animation-duration: 1s; animation-name: slideInLeft;color:#000000;" >
+       
+        
+        <section>
+            <br />
+            <h3 style="font-size:medium;">S'inscrire avec :</h3>
+
+            @{
+                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                if (loginProviders.Count != 0)
+                {
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                        <div>
+                            <p>
+                                @foreach (var provider in loginProviders)
+                                {
+                                    if (provider.DisplayName.Equals("Facebook"))
+                                    {
+                                        <button type="submit" class="bouton" name="provider" value="@provider.AuthenticationScheme" title="Se connecter avec @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                    }
+                                    if (provider.DisplayName.Equals("Google"))
+                                    {
+                                        <button type="submit" class="boutongoogle" name="provider" value="@provider.AuthenticationScheme" title="Se connecter avec @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                    }
+
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+        
+         <!-- BEGIN REGISTRATION FORM -->
+        <form class="login-form" asp-controller="Account" asp-action="Register" method="post" role="form">
+            <h3 class="animated rotateInUpLeft" style="font-size:medium;">ou</h3>
+           
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            @*<p class="hint">
+                Enter your personal details below:
+            </p>*@
+
+            
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label visible-ie8 visible-ie9"></label>
+                <input asp-for="Email" class="form-control placeholder-no-fix" autocomplete="off" placeholder="Entrer votre email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label visible-ie8 visible-ie9"></label>
+                <input asp-for="Password" required class="form-control placeholder-no-fix" autocomplete="off" placeholder="Entrer votre mot de passe" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label visible-ie8 visible-ie9"></label>
+                <input asp-for="ConfirmPassword" class="form-control placeholder-no-fix" autocomplete="off" placeholder="Confirmer votre mot de passe" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group margin-top-20 margin-bottom-20">
+                <label class="check">
+                    <input type="checkbox" required name="tnc" />  J'accepte les<a href="javascript:;">
+                        conditions d'utilisation
+                    </a>
+                    @*& <a href="javascript:;">
+                        Privacy Policy
+                    </a>*@
+                </label>
+                <div id="register_tnc_error">
+                </div>
+            </div>
+            <div class="form-actions">
+                <a type="button" asp-controller="Account" asp-action="Login" class="btn btn-default">Retour</a>
+                <button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right">  Valider  </button>
+            </div>
+        </form>
+        <!-- END REGISTRATION FORM -->
+    </div>
+    <div class="copyright">
+        2016 © eTransfert.
+    </div>
+    <!-- END LOGIN -->
+    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+    <!-- BEGIN CORE PLUGINS -->
+    <!--[if lt IE 9]>
+    <script src="/plugins/respond.min.js"></script>
+    <script src="/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+    <script src="/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="/scripts/metronic.js" type="text/javascript"></script>
+    <script src="/admin/layout/scripts/layout.js" type="text/javascript"></script>
+    <script src="/admin/layout/scripts/demo.js" type="text/javascript"></script>
+    <script src="/admin/pages/scripts/login.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        jQuery(document).ready(function () {
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            Login.init();
+            Demo.init();
+        });
+    </script>
+    <!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>
+
+@*@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}*@

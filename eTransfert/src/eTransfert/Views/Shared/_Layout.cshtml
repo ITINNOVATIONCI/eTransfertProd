@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - eTransfert</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="" name="description">
+    <meta content="ITI" name="author">
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css">
+    <link href="/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+    <link href="/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+    <link href="/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css">
+    <link href="/plugins/morris/morris.css" rel="stylesheet" type="text/css">
+    <!-- END PAGE LEVEL PLUGIN STYLES -->
+    <!-- BEGIN PAGE STYLES -->
+    <link href="/admin/pages/css/tasks.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+    <link href="/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+    <link href="/css/plugins.css" rel="stylesheet" type="text/css">
+    <link href="/admin/layout3/css/layout.css" rel="stylesheet" type="text/css">
+    <link href="/admin/layout3/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+    <link href="/admin/layout3/css/custom.css" rel="stylesheet" type="text/css">
+    <link href="~/css/theme-animate.css" rel="stylesheet" type="text/css" />
+
+   
+    
+    @RenderSection("scriptsh", required: false)
+
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+
+   
+    
+</head>
+<body>
+
+
+    <!-- BEGIN HEADER -->
+    <div class="page-header">
+        <!-- BEGIN HEADER TOP -->
+        <div class="page-header-top">
+            <div class="container">
+                <!-- BEGIN LOGO -->
+                <div class="page-logo">
+                    <a href="/"><img src="~/img/logo-small.png" alt="logo" class="animated infinite" style="animation-duration: 8s; animation-name: flipOutY;"></a>
+
+                </div>
+
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="menu-toggler"></a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+        <!-- END HEADER TOP -->
+        <!-- BEGIN HEADER MENU -->
+        <div class="page-header-menu">
+            <div class="container">
+                <!-- BEGIN MEGA MENU -->
+                <!-- DOC: Apply "hor-menu-light" class after the "hor-menu" class below to have a horizontal menu with white background -->
+                <!-- DOC: Remove data-hover="dropdown" and data-close-others="true" attributes below to disable the dropdown opening on mouse hover -->
+                <div class="hor-menu ">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a asp-controller="Home" asp-action="Index">Accueil</a>
+                        </li>
+                        @if (User.IsInRole("VIP") || User.IsInRole("ADMIN") || User.IsInRole("SUPERVIP"))
+                        {
+                            <li><a asp-controller="Home" asp-action="TransfertExcel">Transfert Par Excel</a></li>
+                        }
+                        <li><a asp-controller="Home" asp-action="Contact">Mes Contacts</a></li>
+                        <li><a asp-controller="Home" asp-action="Historique">Historique</a></li>
+                        <li><a asp-controller="Home" asp-action="CompteRecharge">Rechargement du Compte</a></li>
+                        <li><a asp-controller="Home" asp-action="Help">Comment ça marche?</a></li>
+
+                    @if ( User.IsInRole("ADMIN"))
+                    {
+                        <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>
+                    }
+                         @*<li><a asp-controller="Home" asp-action="Feedback">Feedback</a></li>
+                            <li><a asp-controller="Home" asp-action="ContactUs">Contactez-nous</a></li>*@
+                    </ul>
+                </div>
+                <!-- END MEGA MENU -->
+            </div>
+        </div>
+        <!-- END HEADER MENU -->
+    </div>
+    <!-- END HEADER -->
+    <!-- BEGIN PAGE CONTAINER -->
+    <div class="page-container">
+        @RenderBody()
+    </div>
+    <!-- END PAGE CONTAINER -->
+    <!-- BEGIN FOOTER -->
+    <div class="page-footer">
+        <div class="container">
+            <b>2016 &copy; ITI. <a href="" title="" target="_blank">Tous droits reservés</a></b>
+        </div>
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+    <!-- END FOOTER -->
+
+    @RenderSection("scripts", required: false)
+
+
+    <!-- END JAVASCRIPTS -->
+
+</body>
+</html>

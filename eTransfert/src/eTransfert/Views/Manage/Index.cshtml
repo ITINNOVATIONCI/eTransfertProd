@@ -1,0 +1,117 @@
+﻿@model IndexViewModel
+@{
+    ViewBag.Title = "Gestion de compte";
+    Layout = "_LayoutG";
+}
+
+<!-- BEGIN PAGE HEAD -->
+<div class="page-head">
+    <div class="container">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>Mon Compte @*<small>Information de l'entreprise</small>*@</h1>
+        </div>
+        <!-- END PAGE TITLE -->
+        <!-- BEGIN PAGE TOOLBAR -->
+        <div class="page-toolbar">
+
+        </div>
+        <!-- END PAGE TOOLBAR -->
+    </div>
+</div>
+<!-- END PAGE HEAD -->
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+    <div class="container">
+        <!-- BEGIN PAGE BREADCRUMB -->
+        @*<ul class="page-breadcrumb breadcrumb">
+                <li>
+                    <a href="#">@ViewBag.Title.</a><i class="fa fa-circle"></i>
+                </li>
+                <li class="active">
+                    @ViewBag.Title.
+                </li>
+            </ul>*@
+        <!-- END PAGE BREADCRUMB -->
+        <!-- BEGIN PAGE CONTENT INNER -->
+        <div class="row">
+            @*<p class="text-success">@ViewBag.StatusMessage</p>*@
+            <div>
+                <h4>Modifier les paramètres de compte</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>Mot de passe :</dt>
+                    <dd>
+                        [
+                        @if (Model.HasPassword)
+            {
+                            <a asp-controller="Manage" asp-action="ChangePassword">Modifier</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Manage" asp-action="SetPassword">Créer</a>
+                        }
+                        ]
+                    </dd>
+
+                    @if (@Model.Logins.Count != 0)
+                    {
+                        <dt>External Logins:</dt>
+                        <dd>
+
+                            @Model.Logins.Count [<a asp-controller="Manage" asp-action="ManageLogins">Manage</a>]
+                        </dd>
+                    }
+
+
+                    <br />
+                    <br />
+                    <dt>Numero de telephone :</dt>
+                    <dd>
+                        @*<p>
+                                Phone Numbers can used as a second factor of verification in two-factor authentication.
+                                See <a href="http://go.microsoft.com/fwlink/?LinkID=532713">this article</a>
+                                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+                            </p>*@
+
+                        @(Model.PhoneNumber ?? "Aucun") [
+                        @if (Model.PhoneNumber != null)
+                        {
+                            <a asp-controller="Manage" asp-action="AddPhoneNumber">Modifier</a>
+                            @: &nbsp;|&nbsp;
+                            <a asp-controller="Manage" asp-action="RemovePhoneNumber">Supprimer</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Manage" asp-action="AddPhoneNumber">Ajouter</a>
+                        }
+                        ]
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT INNER -->
+
+    </div>
+</div>
+<!-- END PAGE CONTENT -->
+@section Scripts {
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="/admin/layout3/scripts/layout.js" type="text/javascript"></script>
+
+    <!-- END PAGE LEVEL SCRIPTS -->
+    <script>
+jQuery(document).ready(function() {
+   Metronic.init(); // init metronic core componets
+   Layout.init(); // init layout
+   Demo.init(); // init demo(theme settings page)
+   QuickSidebar.init(); // init quick sidebar
+   Index.init(); // init index page
+   Tasks.initDashboardWidget(); // init tash dashboard widget
+});
+    </script>
+    <!-- END JAVASCRIPTS -->
+
+    
+}

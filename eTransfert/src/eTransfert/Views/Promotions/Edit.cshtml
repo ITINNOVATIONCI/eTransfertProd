@@ -1,0 +1,331 @@
+@model eTransfert.Models.Promotion
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        Widget settings form goes here
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn blue">Save changes</button>
+                        <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <!-- BEGIN STYLE CUSTOMIZER -->
+        <div class="theme-panel hidden-xs hidden-sm">
+            <div class="toggler">
+            </div>
+            <div class="toggler-close">
+            </div>
+            <div class="theme-options">
+                <div class="theme-option theme-colors clearfix">
+                    <span>
+                        THEME COLOR
+                    </span>
+                    <ul>
+                        <li class="color-default current tooltips" data-style="default" data-container="body" data-original-title="Default">
+                        </li>
+                        <li class="color-darkblue tooltips" data-style="darkblue" data-container="body" data-original-title="Dark Blue">
+                        </li>
+                        <li class="color-blue tooltips" data-style="blue" data-container="body" data-original-title="Blue">
+                        </li>
+                        <li class="color-grey tooltips" data-style="grey" data-container="body" data-original-title="Grey">
+                        </li>
+                        <li class="color-light tooltips" data-style="light" data-container="body" data-original-title="Light">
+                        </li>
+                        <li class="color-light2 tooltips" data-style="light2" data-container="body" data-html="true" data-original-title="Light 2">
+                        </li>
+                    </ul>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Theme Style
+                    </span>
+                    <select class="layout-style-option form-control input-sm">
+                        <option value="square" selected="selected">Square corners</option>
+                        <option value="rounded">Rounded corners</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Layout
+                    </span>
+                    <select class="layout-option form-control input-sm">
+                        <option value="fluid" selected="selected">Fluid</option>
+                        <option value="boxed">Boxed</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Header
+                    </span>
+                    <select class="page-header-option form-control input-sm">
+                        <option value="fixed" selected="selected">Fixed</option>
+                        <option value="default">Default</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Top Menu Dropdown
+                    </span>
+                    <select class="page-header-top-dropdown-style-option form-control input-sm">
+                        <option value="light" selected="selected">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Mode
+                    </span>
+                    <select class="sidebar-option form-control input-sm">
+                        <option value="fixed">Fixed</option>
+                        <option value="default" selected="selected">Default</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Menu
+                    </span>
+                    <select class="sidebar-menu-option form-control input-sm">
+                        <option value="accordion" selected="selected">Accordion</option>
+                        <option value="hover">Hover</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Style
+                    </span>
+                    <select class="sidebar-style-option form-control input-sm">
+                        <option value="default" selected="selected">Default</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Sidebar Position
+                    </span>
+                    <select class="sidebar-pos-option form-control input-sm">
+                        <option value="left" selected="selected">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+                <div class="theme-option">
+                    <span>
+                        Footer
+                    </span>
+                    <select class="page-footer-option form-control input-sm">
+                        <option value="fixed">Fixed</option>
+                        <option value="default" selected="selected">Default</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        <!-- END STYLE CUSTOMIZER -->
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="index-2.html">Accueil</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+            </ul>
+            <div class="page-toolbar">
+                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm btn-default" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                    <i class="icon-calendar"></i>&nbsp; <span class="thin uppercase visible-lg-inline-block"></span>&nbsp; <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+        </div>
+        <h3 class="page-title">
+            Dashboard <small>Rapports & statistiques</small>
+        </h3>
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN DASHBOARD STATS -->
+        <div class="row">
+            @*<div id="listediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    @await Html.PartialAsync("~/Views/Admin/_ViewListeUtilisateur.cshtml")
+                </div>*@
+            @*<div id="soldediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    @await Html.PartialAsync("~/Views/Admin/_ViewSoldePrincipal")
+                </div>*@
+            @*<div id="benefdiv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    @await Html.PartialAsync("~/Views/Admin/_ViewBenefice")
+                </div>*@
+            @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat purple-plum">
+                        <div class="visual">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                +89%
+                            </div>
+                            <div class="desc">
+                                Brand Popularity
+                            </div>
+                        </div>
+                        <a class="more" href="javascript:;">
+                            View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>*@
+        </div>
+        <!-- END DASHBOARD STATS -->
+        <div class="clearfix">
+        </div>
+
+        <div class="clearfix">
+        </div>
+
+        <p style="font-size:medium;">
+
+            <a asp-action="Create" asp-controller="Promotions">Nouvelle promotion</a>
+        </p>
+
+
+        <div class="row">
+
+
+            <div class="col-md-pull-8">
+                <!-- BEGIN SAMPLE TABLE PORTLET-->
+                <div class="portlet box blue-soft">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Liste des promotions
+                        </div>
+                        <div class="tools">
+                            @*<a href="javascript:;" class="collapse">
+                                </a>
+                                <a href="#portlet-config" data-toggle="modal" class="config">
+                                </a>*@
+                            <a href="javascript:;" class="reload">
+                            </a>
+                            @*<a href="javascript:;" class="remove">
+                                </a>*@
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+
+
+
+
+
+                        <form asp-action="Edit">
+                            <div class="form-horizontal">
+                                <h4>Promotion</h4>
+                                <hr />
+                                <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <div class="form-group">
+                                    <label asp-for="description" class="col-md-2 control-label"></label>
+                                    <div class="col-md-10">
+                                        <input asp-for="description" class="form-control" />
+                                        <span asp-validation-for="description" class="text-danger" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="etat" class="col-md-2 control-label"></label>
+                                    <div class="col-md-10">
+                                        <input asp-for="etat" class="form-control" />
+                                        <span asp-validation-for="etat" class="text-danger" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="offre" class="col-md-2 control-label"></label>
+                                    <div class="col-md-10">
+                                        <input asp-for="offre" class="form-control" />
+                                        <span asp-validation-for="offre" class="text-danger" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="operateur" class="col-md-2 control-label"></label>
+                                    <div class="col-md-10">
+                                        <input asp-for="operateur" class="form-control" />
+                                        <span asp-validation-for="operateur" class="text-danger" />
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="submit" class="btn green"><i class="fa fa-check"></i> Valider</button>
+                                            @*<button type="button" class="btn default">Cancel</button>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                      
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+                <!-- END SAMPLE TABLE PORTLET-->
+
+
+                <div>
+                    <a asp-action="Index">Back to List</a>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

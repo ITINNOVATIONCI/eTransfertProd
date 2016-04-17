@@ -1,0 +1,72 @@
+﻿@model ICollection<Microsoft.AspNet.Identity.UserLoginInfo>
+@{
+    ViewBag.Title = "Remove Login";
+    Layout = "_LayoutG";
+}
+
+<!-- BEGIN PAGE HEAD -->
+<div class="page-head">
+    <div class="container">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>Contact <small>Information de l'entreprise</small></h1>
+        </div>
+        <!-- END PAGE TITLE -->
+        <!-- BEGIN PAGE TOOLBAR -->
+        <div class="page-toolbar">
+        </div>
+        <!-- END PAGE TOOLBAR -->
+    </div>
+</div>
+<!-- END PAGE HEAD -->
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+    <div class="container">
+        <!-- BEGIN PAGE BREADCRUMB -->
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="#">@ViewBag.Title.</a><i class="fa fa-circle"></i>
+            </li>
+            <li class="active">
+                @ViewBag.Title.
+            </li>
+        </ul>
+        <!-- END PAGE BREADCRUMB -->
+        <!-- BEGIN PAGE CONTENT INNER -->
+        <div class="row">
+            @if (Model.Count > 0)
+            {
+                <h4>Registered Logins</h4>
+                <table class="table">
+                    <tbody>
+                        @foreach (var account in Model)
+                        {
+                            <tr>
+                                <td>@account.LoginProvider</td>
+                                <td>
+                                    @if (ViewBag.ShowRemoveButton)
+                                    {
+                                        <form asp-controller="Manage" asp-action="RemoveLogin" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
+                                            <div>
+                                                <input asp-for="@account.LoginProvider" type="hidden" />
+                                                <input asp-for="@account.ProviderKey" type="hidden" />
+                                                <input type="submit" class="btn btn-default" value="Remove" title="Remove this @account.LoginProvider login from your account" />
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        @: &nbsp;
+                        }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <!-- END PAGE CONTENT INNER -->
+
+    </div>
+</div>
+<!-- END PAGE CONTENT -->

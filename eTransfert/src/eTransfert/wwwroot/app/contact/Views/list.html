@@ -1,0 +1,130 @@
+﻿<div class="col-md-12">
+
+    <div class="demo-section k-header wide">
+        <!--<a class="k-button k-button-icontext k-add-button" href="#"></a>-->
+        <kendo-button class="k-add-button" ng-click="onClick1(kendoEvent)"><span class="k-icon k-add"></span>Ajouter un contact</kendo-button>
+        <div kendo-list-view="myGrid" id="listView" k-data-source="source">
+            <div class="product-view" k-template>
+                <dl>
+                    <dt>Nom</dt>
+                    <dd>{{ dataItem.Nom }}</dd>
+                    <dt>Numero</dt>
+                    <dd>{{ dataItem.Numero }}</dd>
+                </dl>
+                <div class="edit-buttons">
+                    <a class="k-button k-edit-button" href="\\#"><span class="k-icon k-edit"></span></a>
+                    <a class="k-button k-delete-button" href="\\#"><span class="k-icon k-delete"></span></a>
+                </div>
+            </div>
+
+            <div class="product-view" k-edit-template>
+                <dl>                   
+                    <dt>Nom</dt>
+                    <dd>
+                        <input type="text" class="k-textbox" data-bind="value:Nom" name="Nom" required="required" validationMessage="required" />
+                        <span data-for="Nom" class="k-invalid-msg"></span>
+                    </dd>
+                    <dt>Numero</dt>
+                    <dd>
+                        <input type="text" data-bind="value:Numero" name="Numero" required="required" validationMessage="required" />
+                        <span data-for="Numero" class="k-invalid-msg"></span>
+                    </dd>
+                    <dt><input type="text" class="k-textbox" data-bind="value:Id" name="Id" ng-show="false" /></dt>     
+                </dl>
+                <div class="edit-buttons">
+                    <a class="k-button k-update-button" href="\\#"><span class="k-icon k-update"></span></a>
+                    <a class="k-button k-cancel-button" href="\\#"><span class="k-icon k-cancel"></span></a>
+                </div>
+            </div>
+
+        </div>
+        <div kendo-pager k-data-source="source"></div>
+    </div>
+
+    <script>
+    </script>
+
+    <style>
+        .product-view {
+            float: left;
+            width: 25%;
+            height: 170px;
+            box-sizing: border-box;
+            border-top: 0;
+            position: relative;
+        }
+
+            .product-view:nth-child(even) {
+                border-left-width: 0;
+            }
+
+            .product-view dl {
+                margin: 10px 10px 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            .product-view dt, dd {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                line-height: 24px;
+                font-size: 18px;
+            }
+
+            .product-view dt {
+                font-size: 11px;
+                height: 16px;
+                line-height: 16px;
+                text-transform: uppercase;
+                opacity: 0.5;
+            }
+
+            .product-view dd {
+                height: 46px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+                .product-view dd .k-widget,
+                .product-view dd .k-textbox {
+                    font-size: 14px;
+                }
+
+        .k-listview {
+            border-width: 1px 0 0;
+            padding: 0;
+            overflow: hidden;
+            min-height: 298px;
+        }
+
+        .edit-buttons {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: right;
+            padding: 5px;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        span.k-invalid-msg {
+            position: absolute;
+            margin-left: 6px;
+        }
+
+
+        @media only screen and (max-width : 620px) {
+
+            .product-view {
+                width: 100%;
+            }
+
+                .product-view:nth-child(even) {
+                    border-left-width: 1px;
+                }
+        }
+    </style>
+</div>
+
