@@ -37,13 +37,13 @@ namespace eTransfert.API
             {
 
                 currentUserId = HttpContext.User.GetUserId();
-                return _dbContext.Transactions.Where(c => c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(10);
+                return _dbContext.Transactions.Where(c => c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(100);
 
             }
             else
             {
                 currentUserId = HttpContext.User.GetUserId();
-                return _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(10);
+                return _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(50);
 
             }
             //return _dbContext.Transactions;
