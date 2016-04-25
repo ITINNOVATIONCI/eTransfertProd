@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,6 +16,8 @@ namespace eTransfert.ViewModels.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string Role { get; set; }
 
         [Display(Name = "Se souvenir de moi?")]
         public bool RememberMe { get; set; }
