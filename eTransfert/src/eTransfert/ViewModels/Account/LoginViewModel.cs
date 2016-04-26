@@ -8,6 +8,7 @@ namespace eTransfert.ViewModels.Account
 {
     public class LoginViewModel
     {
+        public string UserId { get; set; }
 
         [Required]
         [EmailAddress]
@@ -19,10 +20,15 @@ namespace eTransfert.ViewModels.Account
 
         public string Role { get; set; }
 
+        public Double CompteUnite { get; set; }
+        public Double SeuilUnite { get; set; }
+
         [Display(Name = "Se souvenir de moi?")]
         public bool RememberMe { get; set; }
 
         [Display(Name = "Est Connecté?")]
         public bool IsConnected { get; set; }
+
+
     }
 }

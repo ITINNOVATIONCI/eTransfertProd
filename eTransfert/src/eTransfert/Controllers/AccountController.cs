@@ -107,16 +107,18 @@ namespace eTransfert.Controllers
                 {
                     _logger.LogInformation(1, "User logged in.");
 
-                    var userIdentity = (ClaimsIdentity)User.Identity;
-                    var claims = userIdentity.Claims;
-                    var roleClaimType = userIdentity.RoleClaimType;
-                    var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+                    ApplicationUser us = await _userManager.FindByEmailAsync(model.Email);
+                    var cl = await _userManager.GetRolesAsync(us);
 
-                    if (roles.Count != 0)
+                    if (cl.Count != 0)
                     {
-                        model.Role = roles[0].Value;
+                        var r = cl.FirstOrDefault();
+                        model.Role = r;
                     }
 
+                    model.CompteUnite = us.CompteUnite;
+                    model.SeuilUnite = us.SeuilUnite;
+                    model.UserId = us.Id;
                     model.IsConnected = true;
                     return new ObjectResult(model);
                 }
@@ -254,16 +256,6 @@ namespace eTransfert.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
                     await _emailSender.SendWelcomeEmail(user.Email, user.Email);
-
-                    var userIdentity = (ClaimsIdentity)User.Identity;
-                    var claims = userIdentity.Claims;
-                    var roleClaimType = userIdentity.RoleClaimType;
-                    var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
-
-                    if (roles.Count != 0)
-                    {
-                        model.Role = roles[0].Value;
-                    }
 
                     model.IsSaved = true;
                     return new ObjectResult(model);

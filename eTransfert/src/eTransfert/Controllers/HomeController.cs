@@ -17,6 +17,7 @@ using LumenWorks.Framework.IO.Csv;
 using Microsoft.Net.Http.Headers;
 using Microsoft.ApplicationInsights;
 using eTransfert.Services;
+using Microsoft.AspNet.Identity;
 
 namespace eTransfert.Controllers
 {
@@ -28,6 +29,7 @@ namespace eTransfert.Controllers
         protected string URISignature = "http://api.sandbox.cinetpay.com/v1/?method=getSignatureByPost";
         protected string URIStatus = "http://api.sandbox.cinetpay.com/v1/?method=checkPayStatus";
 
+        private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _dbContext;
         public string currentUserId { get; set; }
         DataTable Exdata;
@@ -38,8 +40,9 @@ namespace eTransfert.Controllers
         public List<Promotion> lstPromo;
         public string message { get; set; }
 
-        public HomeController(ApplicationDbContext dbContext, TelemetryClient Telemetry)
+        public HomeController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, TelemetryClient Telemetry)
         {
+            _userManager = userManager;
             _dbContext = dbContext;
             telemetry = Telemetry;
             //Name = this.User.Identity.Name;
@@ -719,6 +722,202 @@ namespace eTransfert.Controllers
 
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> PaiementMobile(Transactions trans)
+        {
+            //telemetry.TrackEvent("WinGame");
+            //_dbContext = new ApplicationDbContext();
+            ViewBag.messageVIP = "";
+            currentUserId = trans.idUtilisateur;
+            trans.Id = Guid.NewGuid().ToString();
+            trans.Date = DateTime.UtcNow.Date;
+            trans.DateTransaction = DateTime.UtcNow;
+            trans.idUtilisateur = currentUserId;
+            trans.TypeTransaction = "TRANSFERT";
+            //trans.TypeTransfert = "RAPIDE";
+            trans.Etat = "ACTIF";
+
+            if (trans.TypeTransfert == "COMPTE")
+            {
+                trans.Pourcentage = 0;
+                trans.Total = trans.Montant;
+
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+
+                if (currentUser.CompteUnite > 0 && currentUser.CompteUnite >= trans.Total)
+                {
+
+                    PaiementCOMPTE(trans, currentUser);
+
+                    return new ObjectResult(trans);
+                }
+                else
+                {
+                    trans.message = ErrorMessage.MinSoldeFunction;
+                    return new ObjectResult(trans);
+                }
+
+            }
+            else if (trans.TypeTransfert == "VIP")
+            {
+
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                var cl = await _userManager.GetRolesAsync(currentUser);
+                string role = "";
+
+                if (cl.Count != 0)
+                {
+                    var r = cl.FirstOrDefault();
+                    role = r;
+                }
+
+                if (role == "VIP")
+                {
+                    if (currentUser.CompteUnite > 0 && currentUser.CompteUnite >= trans.Total)
+                    {
+
+                        PaiementCOMPTE(trans, currentUser);
+                    }
+                    else
+                    {
+                        double seuil = -(currentUser.CompteUnite - trans.Montant);
+                        if (seuil < currentUser.SeuilUnite)
+                        {
+                            trans.Pourcentage = 5;
+                            trans.Total = trans.Montant + (trans.Montant * trans.Pourcentage * 0.01);
+
+                            PaiementVIP(trans, currentUser);
+                        }
+                        else
+                        {
+                            //Mettre un message pour dire que le seuil est atteind
+                            return new ObjectResult(trans);
+                        }
+
+                    }
+
+                    return new ObjectResult(trans);
+                }
+                else if (role == "SUPERVIP" || role == "ADMIN")
+                {
+                    if (currentUser.CompteUnite > 0 && currentUser.CompteUnite >= trans.Total)
+                    {
+
+                        PaiementCOMPTE(trans, currentUser);
+                    }
+                    else
+                    {
+                        double seuil = -(currentUser.CompteUnite - trans.Montant);
+                        if (seuil < currentUser.SeuilUnite)
+                        {
+                            trans.Pourcentage = 0;
+                            trans.Total = trans.Montant + (trans.Montant * trans.Pourcentage * 0.01);
+
+                            //ViewBag.messageVIP = "Transfert de crédit effectué avec succès";
+                            //ViewBag.messageVIP = "ShowErrorPopup()";
+                            // eTransfert.Services.ErrorMessage.message = eTransfert.Services.ErrorMessage.succesFunction;
+
+                            PaiementVIP(trans, currentUser);
+                        }
+                        else
+                        {
+                            //Mettre un message pour dire que le seuil est atteind
+                            trans.message = ErrorMessage.maxFunction;
+                            return new ObjectResult(trans);
+                        }
+
+                    }
+
+                    //return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return new ObjectResult(trans);
+                }
+
+
+            }
+            else
+            {
+                return new ObjectResult(trans);
+            }
+
+            //currentUser = _dbContext.Users.Where(c => c.Id == HttpContext.User.GetUserId()).FirstOrDefault();
+            //ViewBag.Compte = currentUser.CompteUnite;
+            //compte = _dbContext.Comptes.Where(c => c.Id == "1").FirstOrDefault();
+            //ViewBag.ComptePrincipal = compte.SoldeUnite;
+            return new ObjectResult(trans);
+
+        }
+
+        [AllowAnonymous]
+        public ActionResult PaiementMobile(string Id, string UserId)
+        {
+            //_dbContext = new ApplicationDbContext();
+            currentUserId = UserId;
+            IEnumerable<Transactions> lst = _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.Id == Id && c.Etat == "ACTIF" && c.status == "En Attente du Paiement");
+
+            if (lst != null && lst.Count() != 0)
+            {
+                Transactions trans = lst.FirstOrDefault();
+                string signature;
+                string id = trans.DateTransaction.ToString("yyyyMMddhhmmss");
+
+                using (WebClient client = new WebClient())
+                {
+
+                    Config.cpm_designation = "Transfert de credit vers " + trans.Numero;
+
+                    NameValueCollection data = new NameValueCollection();
+                    data.Add("apikey", "106612574455953b2d0e7775.94466351");
+                    data.Add("cpm_site_id", "883420");
+                    data.Add("cpm_currency", "CFA");
+                    data.Add("cpm_page_action", "PAYMENT");
+                    data.Add("cpm_payment_config", "SINGLE");
+                    data.Add("cpm_version", "V1");
+                    data.Add("cpm_language", "fr");
+                    data.Add("cpm_trans_date", id);
+                    data.Add("cpm_trans_id", trans.Id.ToString());
+                    data.Add("cpm_designation", Config.cpm_designation);
+                    data.Add("cpm_amount", trans.Total.ToString());
+                    data.Add("cpm_custom", HttpContext.User.Identity.Name);
+
+                    byte[] responsebytes = client.UploadValues(URISignature, "POST", data);
+                    signature = Encoding.UTF8.GetString(responsebytes);
+                    signature = JsonConvert.DeserializeObject<string>(signature);
+
+                }
+
+                Dictionary<string, object> postData = new Dictionary<string, object>();
+                postData.Add("apikey", Config.apikey);
+                postData.Add("cpm_site_id", Config.cpm_site_id);
+                postData.Add("cpm_currency", Config.cpm_currency);
+                postData.Add("cpm_page_action", Config.cpm_page_action);
+                postData.Add("cpm_payment_config", Config.cpm_payment_config);
+                postData.Add("cpm_version", Config.cpm_version);
+                postData.Add("cpm_language", Config.cpm_language);
+                postData.Add("cpm_trans_date", id);
+                postData.Add("cpm_trans_id", trans.Id.ToString());
+                postData.Add("cpm_designation", Config.cpm_designation);
+                postData.Add("cpm_amount", trans.Total.ToString());
+                postData.Add("cpm_custom", HttpContext.User.Identity.Name);
+                postData.Add("signature", signature);
+
+                //postData.Add("notify_url", "http://we.etransfert.net/Home/Notification");
+                //postData.Add("return_url", "http://etransfert.azurewebsites.net/");
+                //postData.Add("cancel_url", "http://localhost:62378/");
+
+                PaiementData pay = new PaiementData();
+                pay.data = postData;
+
+                return View(pay);
+            }
+
+            return View(null);
+
+        }
+
         public PaiementData PaiementRapide(Transactions trans, string Description)
         {
             string signature;
@@ -935,9 +1134,6 @@ namespace eTransfert.Controllers
                     storeInfo(tr);
                     #endregion
 
-
-
-
                 }
                 else
                 {
@@ -983,73 +1179,6 @@ namespace eTransfert.Controllers
             return View(PaiementRapide(trans, "Rechargement"));
 
             //return RedirectToAction("CompteRecharge", "Home");
-
-        }
-
-        [AllowAnonymous]
-        public ActionResult PaiementMobile(string Id, string UserId)
-        {
-            //_dbContext = new ApplicationDbContext();
-            currentUserId = UserId;
-            IEnumerable<Transactions> lst = _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.Id == Id && c.Etat == "ACTIF" && c.status == "En Attente du Paiement");
-
-            if (lst != null && lst.Count() != 0)
-            {
-                Transactions trans = lst.FirstOrDefault();
-                string signature;
-                string id = trans.DateTransaction.ToString("yyyyMMddhhmmss");
-
-                using (WebClient client = new WebClient())
-                {
-
-                    Config.cpm_designation = "Transfert de credit vers " + trans.Numero;
-
-                    NameValueCollection data = new NameValueCollection();
-                    data.Add("apikey", "106612574455953b2d0e7775.94466351");
-                    data.Add("cpm_site_id", "883420");
-                    data.Add("cpm_currency", "CFA");
-                    data.Add("cpm_page_action", "PAYMENT");
-                    data.Add("cpm_payment_config", "SINGLE");
-                    data.Add("cpm_version", "V1");
-                    data.Add("cpm_language", "fr");
-                    data.Add("cpm_trans_date", id);
-                    data.Add("cpm_trans_id", trans.Id.ToString());
-                    data.Add("cpm_designation", Config.cpm_designation);
-                    data.Add("cpm_amount", trans.Total.ToString());
-                    data.Add("cpm_custom", HttpContext.User.Identity.Name);
-
-                    byte[] responsebytes = client.UploadValues(URISignature, "POST", data);
-                    signature = Encoding.UTF8.GetString(responsebytes);
-                    signature = JsonConvert.DeserializeObject<string>(signature);
-
-                }
-
-                Dictionary<string, object> postData = new Dictionary<string, object>();
-                postData.Add("apikey", Config.apikey);
-                postData.Add("cpm_site_id", Config.cpm_site_id);
-                postData.Add("cpm_currency", Config.cpm_currency);
-                postData.Add("cpm_page_action", Config.cpm_page_action);
-                postData.Add("cpm_payment_config", Config.cpm_payment_config);
-                postData.Add("cpm_version", Config.cpm_version);
-                postData.Add("cpm_language", Config.cpm_language);
-                postData.Add("cpm_trans_date", id);
-                postData.Add("cpm_trans_id", trans.Id.ToString());
-                postData.Add("cpm_designation", Config.cpm_designation);
-                postData.Add("cpm_amount", trans.Total.ToString());
-                postData.Add("cpm_custom", HttpContext.User.Identity.Name);
-                postData.Add("signature", signature);
-
-                postData.Add("notify_url", "http://etransfert.azurewebsites.net/Home/Notification");
-                postData.Add("return_url", "http://etransfert.azurewebsites.net/");
-                //postData.Add("cancel_url", "http://localhost:62378/");
-
-                PaiementData pay = new PaiementData();
-                pay.data = postData;
-
-                return View(pay);
-            }
-
-            return View(null);
 
         }
 
