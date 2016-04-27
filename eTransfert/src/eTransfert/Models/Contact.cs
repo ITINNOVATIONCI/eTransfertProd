@@ -8,7 +8,7 @@ namespace eTransfert.Models
     public class Contacts
     {
         public string Id { get; set; }
-        public string idUtilisateur { get; set; }
+        public string Utilisateur { get; set; }
         public string Nom { get; set; }        
         public string Numero { get; set; }
     }

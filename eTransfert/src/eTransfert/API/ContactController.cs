@@ -32,7 +32,7 @@ namespace eTransfert.API
         {
             currentUserId = HttpContext.User.GetUserId();
             //return _dbContext.Contacts;
-            return _dbContext.Contacts.Where(c => c.idUtilisateur == currentUserId);
+            return _dbContext.Contacts.Where(c => c.Utilisateur == currentUserId);
         }
 
 
@@ -60,7 +60,7 @@ namespace eTransfert.API
                 {
                     currentUserId = HttpContext.User.GetUserId();
                     contact.Id = Guid.NewGuid().ToString();
-                    contact.idUtilisateur = currentUserId;
+                    contact.Utilisateur = currentUserId;
                     //contact.CreatedAt = DateTimeOffset.Now;
                     //contact.Deleted = false;
                     _dbContext.Contacts.Add(contact);
