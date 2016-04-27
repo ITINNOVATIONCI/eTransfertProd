@@ -47,7 +47,7 @@ namespace eTransfert.Controllers
             telemetry = Telemetry;
             //Name = this.User.Identity.Name;
             lstPromo = _dbContext.Promotion.Where(p => p.etat.Equals("1")).ToList();
-           
+
 
         }
 
@@ -63,9 +63,9 @@ namespace eTransfert.Controllers
 
 
 
-            ViewBag.liste=lstPromo;
+            ViewBag.liste = lstPromo;
             //telemetry.TrackEvent("WinGame");
-            ViewBag.messageVIP=eTransfert.Services.ErrorMessage.message;
+            ViewBag.messageVIP = eTransfert.Services.ErrorMessage.message;
             eTransfert.Services.ErrorMessage.message = null;
             currentUser = _dbContext.Users.Where(c => c.Id == HttpContext.User.GetUserId()).FirstOrDefault();
             ViewBag.Compte = currentUser.CompteUnite;
@@ -117,7 +117,7 @@ namespace eTransfert.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  ActionResult TransfertExcel(IFormFile upload, ExcelData result)
+        public ActionResult TransfertExcel(IFormFile upload, ExcelData result)
         {
             if (ModelState.IsValid)
             {
@@ -465,7 +465,7 @@ namespace eTransfert.Controllers
                         else
                         {
                             HelperSMS.SendSMS(Config.adminNumber, "Trans null");
-                            
+
                         }
                     }
                     catch (Exception)
@@ -497,7 +497,7 @@ namespace eTransfert.Controllers
                 No = No.Trim();
 
                 string respStr = "";
-                
+
                 Uri uri = new Uri(String.Format("https://www.symtel.biz/fr/index.php?mod=cgibin&page=5&user=RS3680&code=6d776c682122de4f9be5bd0ba13cfb70&montant={0}&phone={1}", Montant, 225 + No));
                 HttpWebRequest requestFile = (HttpWebRequest)WebRequest.Create(uri);
                 requestFile.ContentType = "application/html";
@@ -650,7 +650,7 @@ namespace eTransfert.Controllers
 
                         PaiementCOMPTE(trans, currentUser);
                     }
-                    else 
+                    else
                     {
                         double seuil = -(currentUser.CompteUnite - trans.Montant);
                         if (seuil < currentUser.SeuilUnite)
@@ -664,7 +664,7 @@ namespace eTransfert.Controllers
                         {
                             //Mettre un message pour dire que le seuil est atteind
                             return RedirectToAction("Index", "Home");
-                        }  
+                        }
 
                     }
 
@@ -851,8 +851,9 @@ namespace eTransfert.Controllers
 
         }
 
+        [HttpGet]
         [AllowAnonymous]
-        public ActionResult PaiementMobile(string Id, string UserId)
+        public async Task<IActionResult> PaiementCinetPay(string Id, string UserId)
         {
             //_dbContext = new ApplicationDbContext();
             currentUserId = UserId;
@@ -864,54 +865,8 @@ namespace eTransfert.Controllers
                 string signature;
                 string id = trans.DateTransaction.ToString("yyyyMMddhhmmss");
 
-                using (WebClient client = new WebClient())
-                {
+                return View(PaiementRapide(trans, "Transfert de credit vers " + trans.Numero));
 
-                    Config.cpm_designation = "Transfert de credit vers " + trans.Numero;
-
-                    NameValueCollection data = new NameValueCollection();
-                    data.Add("apikey", "106612574455953b2d0e7775.94466351");
-                    data.Add("cpm_site_id", "883420");
-                    data.Add("cpm_currency", "CFA");
-                    data.Add("cpm_page_action", "PAYMENT");
-                    data.Add("cpm_payment_config", "SINGLE");
-                    data.Add("cpm_version", "V1");
-                    data.Add("cpm_language", "fr");
-                    data.Add("cpm_trans_date", id);
-                    data.Add("cpm_trans_id", trans.Id.ToString());
-                    data.Add("cpm_designation", Config.cpm_designation);
-                    data.Add("cpm_amount", trans.Total.ToString());
-                    data.Add("cpm_custom", HttpContext.User.Identity.Name);
-
-                    byte[] responsebytes = client.UploadValues(URISignature, "POST", data);
-                    signature = Encoding.UTF8.GetString(responsebytes);
-                    signature = JsonConvert.DeserializeObject<string>(signature);
-
-                }
-
-                Dictionary<string, object> postData = new Dictionary<string, object>();
-                postData.Add("apikey", Config.apikey);
-                postData.Add("cpm_site_id", Config.cpm_site_id);
-                postData.Add("cpm_currency", Config.cpm_currency);
-                postData.Add("cpm_page_action", Config.cpm_page_action);
-                postData.Add("cpm_payment_config", Config.cpm_payment_config);
-                postData.Add("cpm_version", Config.cpm_version);
-                postData.Add("cpm_language", Config.cpm_language);
-                postData.Add("cpm_trans_date", id);
-                postData.Add("cpm_trans_id", trans.Id.ToString());
-                postData.Add("cpm_designation", Config.cpm_designation);
-                postData.Add("cpm_amount", trans.Total.ToString());
-                postData.Add("cpm_custom", HttpContext.User.Identity.Name);
-                postData.Add("signature", signature);
-
-                //postData.Add("notify_url", "http://we.etransfert.net/Home/Notification");
-                //postData.Add("return_url", "http://etransfert.azurewebsites.net/");
-                //postData.Add("cancel_url", "http://localhost:62378/");
-
-                PaiementData pay = new PaiementData();
-                pay.data = postData;
-
-                return View(pay);
             }
 
             return View(null);
@@ -995,7 +950,7 @@ namespace eTransfert.Controllers
                     ErrorMessage.message = ErrorMessage.succesFunction;
                 }
                 else
-                {                    
+                {
                     _dbContext.SaveChanges();
                     ErrorMessage.message = ErrorMessage.errorFunction;
                 }
@@ -1004,7 +959,7 @@ namespace eTransfert.Controllers
             {
                 trans.log = ex.Message;
                 _dbContext.SaveChanges();
-               ErrorMessage.message = ErrorMessage.errorFunction;
+                ErrorMessage.message = ErrorMessage.errorFunction;
 
             }
 
@@ -1212,7 +1167,7 @@ namespace eTransfert.Controllers
         }
 
 
-        
+
 
 
         public IActionResult Error()
@@ -1241,13 +1196,13 @@ namespace eTransfert.Controllers
 
         public ActionResult PaiementUniteTiers(Transactions trans)
         {
-            
+
             ViewBag.messageVIP = "";
             //currentUserId = trans.Utilisateur;
             trans.Id = Guid.NewGuid().ToString();
             trans.Date = DateTime.UtcNow.Date;
             trans.DateTransaction = DateTime.UtcNow;
-           // trans.Utilisateur = currentUserId;
+            // trans.Utilisateur = currentUserId;
             trans.TypeTransaction = "TRANSFERT";
             //trans.TypeTransfert = "VIP";
             trans.Etat = "ACTIF";
@@ -1290,7 +1245,7 @@ namespace eTransfert.Controllers
                     {
                         trans.log = "REUSSI";
                         trans.status = "Terminer";
-                       // currentUser.CompteUnite -= trans.Total;
+                        // currentUser.CompteUnite -= trans.Total;
 
                         _dbContext.SaveChanges();
                         ErrorMessage.message = ErrorMessage.succesFunction;
@@ -1298,13 +1253,13 @@ namespace eTransfert.Controllers
                         #region stock trace
                         //appel storeInfo
                         Trace tr = new Trace();
-                        tr.Id = Guid.NewGuid().ToString();                        
+                        tr.Id = Guid.NewGuid().ToString();
                         tr.DateTransaction = DateTime.UtcNow;
                         tr.Montant = trans.Montant;
                         ApplicationUser currentUser1 = _dbContext.Users.Where(c => c.Id == HttpContext.User.GetUserId()).FirstOrDefault();
-                        tr.TypeTransaction = "Depot unite"+" "+trans.TypeTransfert;
+                        tr.TypeTransaction = "Depot unite" + " " + trans.TypeTransfert;
                         tr.Senderemail = currentUser1.Email;
-                        tr.Receiveremail= currentUser.Email;
+                        tr.Receiveremail = currentUser.Email;
                         storeInfo(tr);
                         #endregion
 
@@ -1387,7 +1342,7 @@ namespace eTransfert.Controllers
                 return RedirectToAction("Index", "Admin");
                 // }
             }
-            else if (trans.TypeTransfert =="SUPERVIP" || trans.TypeTransfert == "ADMIN")
+            else if (trans.TypeTransfert == "SUPERVIP" || trans.TypeTransfert == "ADMIN")
             {
                 currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
 
@@ -1440,7 +1395,7 @@ namespace eTransfert.Controllers
 
         }
 
-        public ActionResult PaiementArgentTiers(double Montant,string Utilisateur)
+        public ActionResult PaiementArgentTiers(double Montant, string Utilisateur)
         {
 
             ViewBag.messageVIP = "";
@@ -1449,13 +1404,13 @@ namespace eTransfert.Controllers
             tr.Id = Guid.NewGuid().ToString();
             tr.Montant = Montant;
             tr.DateTransaction = DateTime.UtcNow;
-           
+
             tr.TypeTransaction = "PAIEMENT";
-            
+
 
             currentUser = _dbContext.Users.Where(c => c.Id == Utilisateur).FirstOrDefault();
             tr.Receiveremail = currentUser.Email;
-            
+
             ApplicationUser currentUser1 = _dbContext.Users.Where(c => c.Id == HttpContext.User.GetUserId()).FirstOrDefault();
             tr.Senderemail = currentUser1.Email;
 
@@ -1475,7 +1430,7 @@ namespace eTransfert.Controllers
             _dbContext.Add(tr);
             _dbContext.Add(trans);
 
-            
+
 
             currentUser.CompteUnite += Montant;
 
@@ -1488,7 +1443,7 @@ namespace eTransfert.Controllers
 
         private void storeInfo(Trace tr)
         {
-            
+
             //tr.Senderemail = HttpContext.User.GetUserId();
             //tr.Id = Guid.NewGuid().ToString();
             //tr.Receiveremail = HttpContext.User.GetUserId();
@@ -1501,7 +1456,7 @@ namespace eTransfert.Controllers
 
         public IActionResult _PromotionView()
         {
-            
+
             ViewBag.liste = lstPromo;
             return PartialView();
         }
