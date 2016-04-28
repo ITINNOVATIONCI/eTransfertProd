@@ -54,15 +54,6 @@ namespace eTransfert.Controllers
         public IActionResult Index()
         {
 
-            //if (HttpContext.User.IsInRole("ADMIN"))
-            //{
-            //    return RedirectToAction("Index", "Admin");
-            //}
-
-
-
-
-
             ViewBag.liste = lstPromo;
             //telemetry.TrackEvent("WinGame");
             ViewBag.messageVIP = eTransfert.Services.ErrorMessage.message;
@@ -853,7 +844,7 @@ namespace eTransfert.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> PaiementCinetPay(string Id, string UserId)
+        public async Task<IActionResult> PaiementCinetPay(string Id, string UserId, string Description)
         {
             //_dbContext = new ApplicationDbContext();
             currentUserId = UserId;
@@ -865,7 +856,7 @@ namespace eTransfert.Controllers
                 string signature;
                 string id = trans.DateTransaction.ToString("yyyyMMddhhmmss");
 
-                return View(PaiementRapide(trans, "Transfert de credit vers " + trans.Numero));
+                return View(PaiementRapide(trans, Description));
 
             }
 
@@ -1104,6 +1095,7 @@ namespace eTransfert.Controllers
 
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Rechargement(Transactions trans)
@@ -1166,10 +1158,6 @@ namespace eTransfert.Controllers
             return View();
         }
 
-
-
-
-
         public IActionResult Error()
         {
             try
@@ -1186,13 +1174,6 @@ namespace eTransfert.Controllers
 
             return View("/Views/Shared/Error.cshtml");
         }
-
-
-
-
-
-
-
 
         public ActionResult PaiementUniteTiers(Transactions trans)
         {
@@ -1440,7 +1421,6 @@ namespace eTransfert.Controllers
 
         }
 
-
         private void storeInfo(Trace tr)
         {
 
@@ -1452,7 +1432,6 @@ namespace eTransfert.Controllers
             _dbContext.Add(tr);
             int i = _dbContext.SaveChanges();
         }
-
 
         public IActionResult _PromotionView()
         {
