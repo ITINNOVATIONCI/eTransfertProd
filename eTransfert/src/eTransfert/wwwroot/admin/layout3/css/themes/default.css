@@ -9,7 +9,11 @@
 Boby
 ****/
 body {
-  background-color: #fff;
+ /* background-color: #fff;*/
+ background-image: url("../../../../../../images/slider-111.jpg") ;
+  background-color:white;
+  background-repeat:no-repeat;
+  background-position:center center;
 }
 body.page-md {
   background: white;
