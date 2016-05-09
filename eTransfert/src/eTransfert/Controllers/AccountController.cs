@@ -17,7 +17,7 @@ using Microsoft.AspNet.Http.Authentication;
 namespace eTransfert.Controllers
 {
     [Authorize]
-    //[RequireHttps]
+    [RequireHttps]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

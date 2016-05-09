@@ -22,7 +22,7 @@ using Microsoft.AspNet.Identity;
 namespace eTransfert.Controllers
 {
     [Authorize]
-    //[RequireHttps]
+    [RequireHttps]
     public class HomeController : Controller
     {
         private TelemetryClient telemetry = new TelemetryClient();

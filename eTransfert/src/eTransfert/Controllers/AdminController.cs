@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 namespace eTransfert.Controllers
 {
+    [RequireHttps]
     public class AdminController : Controller
     {
         private ApplicationDbContext _context;

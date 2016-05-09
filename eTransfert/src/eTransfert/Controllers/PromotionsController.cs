@@ -7,6 +7,7 @@ using System;
 
 namespace eTransfert.Controllers
 {
+    [RequireHttps]
     public class PromotionsController : Controller
     {
         private ApplicationDbContext _context;

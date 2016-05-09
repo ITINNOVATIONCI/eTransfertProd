@@ -14,7 +14,7 @@ using eTransfert.ViewModels.Manage;
 namespace eTransfert.Controllers
 {
     [Authorize]
-    //[RequireHttps]
+    [RequireHttps]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
