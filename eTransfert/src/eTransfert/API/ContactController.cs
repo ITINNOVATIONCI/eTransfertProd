@@ -14,6 +14,7 @@ using Microsoft.AspNet.Authorization;
 
 namespace eTransfert.API
 {
+    
     [Produces("application/json")]
     [Route("api/[controller]")]
     public class ContactsController : Controller

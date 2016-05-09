@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 namespace eTransfert.Controllers
 {
+    
     public class AdminController : Controller
     {
         private ApplicationDbContext _context;
@@ -473,7 +474,7 @@ namespace eTransfert.Controllers
             foreach (var item in lstTrans)
             {
                 CustomTransaction cstrans = new CustomTransaction();
-                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.idUtilisateur).FirstOrDefault();
+                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.Utilisateur).FirstOrDefault();
 
 
                 cstrans.CompteUnite = currentUser.CompteUnite;
@@ -531,12 +532,12 @@ namespace eTransfert.Controllers
 
 
            // var lstTrans = _context.Transactions.Where(t=>t.idUtilisateur.Equals(id)).OrderByDescending(c => c.DateTransaction).ToList();
-            var lstTrans = _context.Transactions.Where(t=>t.idUtilisateur.Equals(id) && t.DateTransaction.Month==mois).OrderByDescending(c => c.DateTransaction).ToList();
+            var lstTrans = _context.Transactions.Where(t=>t.Utilisateur.Equals(id) && t.DateTransaction.Month==mois).OrderByDescending(c => c.DateTransaction).ToList();
 
             foreach (var item in lstTrans)
             {
                 CustomTransaction cstrans = new CustomTransaction();
-                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.idUtilisateur).FirstOrDefault();
+                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.Utilisateur).FirstOrDefault();
 
 
                 cstrans.CompteUnite = currentUser.CompteUnite;
@@ -586,12 +587,12 @@ namespace eTransfert.Controllers
 
 
             // var lstTrans = _context.Transactions.Where(t=>t.idUtilisateur.Equals(id)).OrderByDescending(c => c.DateTransaction).ToList();
-            var lstTrans = _context.Transactions.Where(t => t.idUtilisateur.Equals(id) && t.DateTransaction.Month == mois).OrderByDescending(c => c.DateTransaction).ToList();
+            var lstTrans = _context.Transactions.Where(t => t.Utilisateur.Equals(id) && t.DateTransaction.Month == mois).OrderByDescending(c => c.DateTransaction).ToList();
 
             foreach (var item in lstTrans)
             {
                 CustomTransaction cstrans = new CustomTransaction();
-                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.idUtilisateur).FirstOrDefault();
+                ApplicationUser currentUser = _context.Users.Where(c => c.Id == item.Utilisateur).FirstOrDefault();
 
 
                 cstrans.CompteUnite = currentUser.CompteUnite;
@@ -599,7 +600,7 @@ namespace eTransfert.Controllers
                 cstrans.Email = currentUser.Email;
 
                 cstrans.DateTransaction = item.DateTransaction;
-                cstrans.Id = item.idUtilisateur;
+                cstrans.Id = item.Utilisateur;
                 cstrans.Idtrans = item.Id;
                 cstrans.Montant = item.Montant;
                 cstrans.Numero = item.Numero;

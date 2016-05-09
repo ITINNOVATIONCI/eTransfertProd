@@ -9,7 +9,7 @@ namespace eTransfert.Models
     public class Transactions
     {
         public string Id { get; set; }
-        public string idUtilisateur { get; set; }
+        public string Utilisateur { get; set; }
         public DateTime Date { get; set; }
         public DateTime DateTransaction { get; set; }
         public string buyer_name { get; set; }

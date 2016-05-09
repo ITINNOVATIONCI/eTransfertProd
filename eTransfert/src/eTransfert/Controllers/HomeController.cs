@@ -167,7 +167,7 @@ namespace eTransfert.Controllers
                                 trans.Id = Guid.NewGuid().ToString();
                                 trans.Date = DateTime.UtcNow.Date;
                                 trans.DateTransaction = DateTime.UtcNow;
-                                trans.idUtilisateur = currentUserId;
+                                trans.Utilisateur = currentUserId;
                                 trans.TypeTransaction = "TRANSFERT";
                                 trans.TypeTransfert = "COMPTE";
                                 trans.Etat = "ACTIF";
@@ -196,7 +196,7 @@ namespace eTransfert.Controllers
                                     trans.Id = Guid.NewGuid().ToString();
                                     trans.Date = DateTime.UtcNow.Date;
                                     trans.DateTransaction = DateTime.UtcNow;
-                                    trans.idUtilisateur = currentUserId;
+                                    trans.Utilisateur = currentUserId;
                                     trans.TypeTransaction = "TRANSFERT";
                                     trans.Etat = "ACTIF";
 
@@ -270,7 +270,7 @@ namespace eTransfert.Controllers
                                     trans.Id = Guid.NewGuid().ToString();
                                     trans.Date = DateTime.UtcNow.Date;
                                     trans.DateTransaction = DateTime.UtcNow;
-                                    trans.idUtilisateur = currentUserId;
+                                    trans.Utilisateur = currentUserId;
                                     trans.TypeTransaction = "TRANSFERT";
                                     trans.Etat = "ACTIF";
 
@@ -443,7 +443,7 @@ namespace eTransfert.Controllers
                                     trans.statuscinetpay = ci.transaction.cpm_error_message;
                                     trans.buyer_name = ci.transaction.buyer_name;
 
-                                    currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                                    currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
 
                                     currentUser.CompteUnite += trans.Total;
 
@@ -593,7 +593,7 @@ namespace eTransfert.Controllers
             trans.Id = Guid.NewGuid().ToString();
             trans.Date = DateTime.UtcNow.Date;
             trans.DateTransaction = DateTime.UtcNow;
-            trans.idUtilisateur = currentUserId;
+            trans.Utilisateur = currentUserId;
             trans.TypeTransaction = "TRANSFERT";
             //trans.TypeTransfert = "RAPIDE";
             trans.Etat = "ACTIF";
@@ -607,7 +607,17 @@ namespace eTransfert.Controllers
                 //trans.Total = trans.Montant;
                 trans.status = "En Attente du Paiement";
                 _dbContext.Transactions.Add(trans);
-                _dbContext.SaveChanges();
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+                
 
                 currentUser = _dbContext.Users.Where(c => c.Id == HttpContext.User.GetUserId()).FirstOrDefault();
                 ViewBag.Compte = currentUser.CompteUnite;
@@ -963,7 +973,7 @@ namespace eTransfert.Controllers
             trans.Id = Guid.NewGuid().ToString();
             trans.Date = DateTime.UtcNow.Date;
             trans.DateTransaction = DateTime.UtcNow;
-            trans.idUtilisateur = currentUserId;
+            trans.Utilisateur = currentUserId;
             trans.TypeTransaction = "PAIEMENT";
             trans.ModePaiement = "CINETPAY";
             trans.Etat = "ACTIF";
@@ -991,7 +1001,7 @@ namespace eTransfert.Controllers
         {
             //_dbContext = new ApplicationDbContext();
             currentUserId = UserId;
-            IEnumerable<Transactions> lst = _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.Id == Id && c.Etat == "ACTIF" && c.status == "En Attente du Paiement");
+            IEnumerable<Transactions> lst = _dbContext.Transactions.Where(c => c.Utilisateur == currentUserId && c.Id == Id && c.Etat == "ACTIF" && c.status == "En Attente du Paiement");
 
             if (lst != null && lst.Count() != 0)
             {
@@ -1148,7 +1158,7 @@ namespace eTransfert.Controllers
                 _dbContext.Transactions.Add(trans);
                 _dbContext.SaveChanges();
 
-                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
                 ViewBag.Compte = currentUser.CompteUnite;
 
 
@@ -1209,7 +1219,7 @@ namespace eTransfert.Controllers
 
 
 
-                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
 
                 if (currentUser.CompteUnite > 0 && currentUser.CompteUnite >= trans.Total)
                 {
@@ -1228,7 +1238,7 @@ namespace eTransfert.Controllers
             else if (trans.TypeTransfert == "VIP")
             {
 
-                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
 
                 // if (HttpContext.User.IsInRole("VIP"))
                 // {
@@ -1260,7 +1270,7 @@ namespace eTransfert.Controllers
             }
             else if (trans.TypeTransfert =="SUPERVIP" || trans.TypeTransfert == "ADMIN")
             {
-                currentUser = _dbContext.Users.Where(c => c.Id == trans.idUtilisateur).FirstOrDefault();
+                currentUser = _dbContext.Users.Where(c => c.Id == trans.Utilisateur).FirstOrDefault();
 
                 if (currentUser.CompteUnite > 0 && currentUser.CompteUnite >= trans.Total)
                 {
@@ -1334,11 +1344,11 @@ namespace eTransfert.Controllers
             trans.Id = Guid.NewGuid().ToString();
             trans.Date = DateTime.UtcNow.Date;
             trans.DateTransaction = DateTime.UtcNow;
-            trans.idUtilisateur = currentUserId;
+            trans.Utilisateur = currentUserId;
             trans.TypeTransaction = "PAIEMENT ARGENT";
             trans.Montant = Montant;
             trans.Total = Montant;
-            trans.idUtilisateur = idUtilisateur;
+            trans.Utilisateur = idUtilisateur;
             trans.Etat = "ACTIF";
 
 

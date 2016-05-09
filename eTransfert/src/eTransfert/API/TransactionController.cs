@@ -14,6 +14,7 @@ using System.Linq;
 
 namespace eTransfert.API
 {
+   
     [Produces("application/json")]
     [Route("api/[controller]")]
     public class TransactionsController : Controller
@@ -43,7 +44,7 @@ namespace eTransfert.API
             else
             {
                 currentUserId = HttpContext.User.GetUserId();
-                return _dbContext.Transactions.Where(c => c.idUtilisateur == currentUserId && c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(50);
+                return _dbContext.Transactions.Where(c => c.Utilisateur == currentUserId && c.TypeTransaction == "TRANSFERT").OrderByDescending(c => c.DateTransaction).Take(50);
 
             }
             //return _dbContext.Transactions;
