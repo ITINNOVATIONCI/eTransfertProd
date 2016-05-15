@@ -34,7 +34,8 @@
     "LumenWorksCsvReader": "3.9.0",
     "Microsoft.ApplicationInsights.AspNet": "1.0.0-rc1",
     "Microsoft.AspNet.Authentication.Google": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Identity": "3.0.0-rc1-final"
+    "Microsoft.AspNet.Identity": "3.0.0-rc1-final",
+    "Sendgrid": "6.3.4"
   },
 
   "commands": {

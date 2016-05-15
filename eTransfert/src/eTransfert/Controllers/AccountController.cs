@@ -13,6 +13,7 @@ using eTransfert.Models;
 using eTransfert.Services;
 using eTransfert.ViewModels.Account;
 using Microsoft.AspNet.Http.Authentication;
+using FacebookAutomation.Services;
 
 namespace eTransfert.Controllers
 {
@@ -25,6 +26,7 @@ namespace eTransfert.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        MailerParametre mparam;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -196,13 +198,35 @@ namespace eTransfert.Controllers
                 {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                        "Veuillez valider votre compte en cliquant sur ce lien : <a href=\"" + callbackUrl + "\">link</a>");
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action("", "", new { }, protocol: HttpContext.Request.Scheme);
+
+
+
+                    mparam = new MailerParametre();
+
+                    mparam.recipients = model.Email;
+                    mparam.subject = "Etransfert - Bienvenue";
+                    mparam.text = "<b style=\"color:#333333;font-size:medium;\"></b>";
+                    mparam.html = "<b style=\"color:#333333;font-size:medium;\"> </b>";
+
+                    mparam.templateEngine = "f7f2bf0c-8c69-434d-a265-275ab0cd71db";
+                    mparam.Substitution = new Dictionary<string, string>();
+                    mparam.Substitution.Add("iti_subject", "Bienvenue");
+                    mparam.Substitution.Add("iti_callback", callbackUrl);
+
+
+
+
+                    Mailer.SendMail(mparam);
+
+
+
+                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                    //    "Veuillez valider votre compte en cliquant sur ce lien : <a href=\"" + callbackUrl + "\">link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "Nouveau compte crée avec ce mot de passe.");
-                    await _emailSender.SendWelcomeEmail(user.Email, user.Email);
+                   // await _emailSender.SendWelcomeEmail(user.Email, user.Email);
 
 
                     //if (HttpContext.User.IsInRole("ADMIN"))
@@ -211,7 +235,7 @@ namespace eTransfert.Controllers
                     //}
                     //else
                     //{
-                    //    return RedirectToAction(nameof(HomeController.Index), "Home");
+                       return RedirectToAction(nameof(HomeController.Index), "Home");
                     //}
 
 
@@ -414,7 +438,8 @@ namespace eTransfert.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                //if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -424,8 +449,32 @@ namespace eTransfert.Controllers
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   "Pour reinitialiser votre mot de passe veuillez cliquer sur ce lien: <a href=\"" + callbackUrl + "\">link</a>");
+
+
+
+                mparam = new MailerParametre();
+
+                mparam.recipients = model.Email;
+                mparam.subject = "Etransfert - Mot de passe oublié";
+                mparam.text = "<b style=\"color:#333333;font-size:medium;\"> Pour r&eacute;initialiser votre votre mot de passe veuillez cliquer sur le bouton ci dessous.</b>";
+                mparam.html = "<b style=\"color:#333333;font-size:medium;\"> Pour r&eacute;initialiser votre votre mot de passe veuillez cliquer sur le bouton ci dessous.</b>";
+
+                mparam.templateEngine = "7169bf30-a6a9-4dc4-b424-dca53622b6bb";
+                mparam.Substitution = new Dictionary<string, string>();
+                mparam.Substitution.Add("iti_subject", "Réinitialiser le mot de passe");
+                mparam.Substitution.Add("iti_callback", callbackUrl);
+
+
+
+
+                Mailer.SendMail(mparam);
+
+
+
+
+
+               // await _emailSender.SendEmailAsync(model.Email, "Reset Password",
+               //    "Pour reinitialiser votre mot de passe veuillez cliquer sur ce lien: <a href=\"" + callbackUrl + "\">link</a>");
                 return View("ForgotPasswordConfirmation");
             }
 

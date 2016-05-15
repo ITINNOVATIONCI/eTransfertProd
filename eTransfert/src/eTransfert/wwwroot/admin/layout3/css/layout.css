@@ -7,8 +7,8 @@
 ----------------------------------------------------*/
 @media print {
   body {
-    /*background-color: #fff !important;*/
-    background-image: url("../../../../../../images/slider-111.jpg") ;
+    background-color: #fff !important;
+    /*background-image: url("../../../../../../images/slider-11.jpg") ;*/
   background-color:white;
   background-repeat:no-repeat;
   background-position:center center;
@@ -49,7 +49,7 @@
   .page-container {
     margin: 0px !important;
     padding: 0px !important;
-    background-image:url(/images/slider-11.jpg)
+    /*background-image:url(/images/slider-11.jpg)*/
   }
   .page-container .page-content {
     padding: 0 !important;

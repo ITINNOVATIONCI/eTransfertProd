@@ -37,6 +37,7 @@
         $(document).ready(function () {
             Metronic.init(); // Run metronic theme
             Metronic.setAssetsPath('/'); // Set the assets folder path
+            $('.k-update-button').prop("disabled", false);
         });
         
 
@@ -120,16 +121,26 @@
                 Total: tot.value,
                 TypeTransfert: typ
             },
-            complete: function (response) {
-               
-               window.setTimeout(function () {
-                    Metronic.stopPageLoading();
-               }, 2000);
-                 location.reload(true);
-                @*var urle = '@Url.Action("Index", "Home")';
+            success: function (response) {
+
+                @*if (typ == "RAPIDE") {
+                    //var urle = '@Url.Action("Index", "Home")';
+
+                    // window.location.href = urle;
+                }
+                else {*@
+
+
+
+                    window.setTimeout(function () {
+                        Metronic.stopPageLoading();
+                    }, 2000);
+                    location.reload(true);
+                    @*var urle = '@Url.Action("Index", "Home")';
                
                 window.location.href = urle;*@
-                //alert("olivier");
+                    //alert("olivier");
+                
             }
         });
 
@@ -139,32 +150,36 @@
 
 
 
-    $('.k-update-button').on('click', function (e) {
-        //alert("olivier");
+    $('.k-update-button').on('submit', function (e) {
+
+        $('#btn').prop("disabled", true);
+
+        alert("olivier");
        
-        var bla = $('#phone_number').val();
-        //alert(bla);
-        if (bla == null  || bla == "" || bla == undefined) {
+       
+        //var bla = $('#phone_number').val();
+        ////alert(bla);
+        //if (bla == null  || bla == "" || bla == undefined) {
 
 
-            $('.k-update-button').prop("disabled", false);
-        }
-        else {
-            e.preventDefault();//arrete submit normal
+        //    $('.k-update-button').prop("disabled", false);
+        //}
+        //else {
+        //    e.preventDefault();//arrete submit normal
 
 
 
-            $('.k-update-button').prop("disabled", true);
-            Metronic.startPageLoading({ animate: true });
-            //foo();
-            //alert("olivier before");
-            submitdata();
-            //alert("olivier after");
+        //    $('.k-update-button').prop("disabled", true);
+        //    Metronic.startPageLoading({ animate: true });
+        //    //foo();
+        //    //alert("olivier before");
+        //    submitdata();
+        //    //alert("olivier after");
 
-            //window.setTimeout(function () {
-            //    Metronic.stopPageLoading();
-            //}, 2000);
-        }
+        //    //window.setTimeout(function () {
+        //    //    Metronic.stopPageLoading();
+        //    //}, 2000);
+        //}
 
 
     });
@@ -342,7 +357,7 @@
                         </div>
                     </div>
                     <div class="portlet-body k-content">
-                        <form method="post">
+                        <form asp-action="Paiement" asp-controller="Home" method="post">
                             <label for="Title">Numero à recharger</label>
                             <input asp-for="Numero" id="phone_number"  required style="width: 100%;" />
                             @*<br /><br />*@
@@ -378,6 +393,7 @@
 
 
                             <button type="submit" class="k-update-button"><span class="k-icon k-update"></span></button>
+                            @*<button type="submit" class="" name="btn" id="btn" value="valider">valider</button>*@
                         </form>
 
                     </div>

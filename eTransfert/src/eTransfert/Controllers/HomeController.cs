@@ -579,7 +579,7 @@ namespace eTransfert.Controllers
             catch (Exception ex)
             {
                 trans.log = "Le seuveur symtel est tomber";
-                telemetry.TrackEvent("TRANSFERT ECHEC: Le seuveur symtel est tomber");
+                telemetry.TrackEvent("TRANSFERT ECHEC: Le seuveur symtel est tombé");
                 return "ECHEC";
             }
         }
@@ -725,7 +725,7 @@ namespace eTransfert.Controllers
             //ViewBag.Compte = currentUser.CompteUnite;
             //compte = _dbContext.Comptes.Where(c => c.Id == "1").FirstOrDefault();
             //ViewBag.ComptePrincipal = compte.SoldeUnite;
-            return View();
+            return RedirectToAction("Index", "Home");
 
         }
 

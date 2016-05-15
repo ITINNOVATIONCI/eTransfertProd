@@ -23,7 +23,7 @@ namespace eTransfert.ViewModels.Account
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "Le mot de passe et la confirmation ne correspondent pas.")]
         public string ConfirmPassword { get; set; }
 
         [Display(Name = "Est Enregistrer?")]
