@@ -221,6 +221,14 @@
                     </li>
 
                     <li>
+                        <a asp-controller="Admin" asp-action="AjouterRole">
+                            <i class="icon-rocket"></i>
+                            Ajouter role
+                        </a>
+
+                    </li>
+
+                    <li>
                         <a asp-controller="Admin" asp-action="ListeCustomTransaction">
                             <i class="icon-pie-chart"></i>
                             Liste des transactions
@@ -1104,16 +1112,17 @@ Demo.init(); // init demo features
 
         $(function () {
 
-            loadPartialViewListe();
-            loadPartialViewSolde();
-            loadPartialViewBenef(); // first time
+            //loadPartialViewListe();
+            //loadPartialViewSolde();
+            //loadPartialViewBenef(); // first time
+            //loadPartialViewListeAdmin(); // first time
             loadPartialViewBenefTran();
-            // re-call the function each 5 seconds
-            window.setInterval("loadPartialViewListe", 8000);
-            window.setInterval("loadPartialViewBenef()", 12000);
-            window.setInterval("loadPartialViewSolde()", 10000);
-            window.setInterval("loadPartialViewListeAdmin()", 14000);
-            window.setInterval("loadPartialViewBenefTran()", 20000);
+            //// re-call the function each 5 seconds
+            //window.setInterval("loadPartialViewListe", 18000);
+            //window.setInterval("loadPartialViewBenef()", 22000);
+            //window.setInterval("loadPartialViewSolde()", 20000);
+            //window.setInterval("loadPartialViewListeAdmin()", 24000);
+            window.setInterval("loadPartialViewBenefTran()", 30000);
 
 
         });

@@ -1124,7 +1124,11 @@ namespace eTransfert.Controllers
         {
             
             ViewBag.messageVIP = "";
-            //currentUserId = trans.idUtilisateur;
+            currentUserId = trans.Utilisateur;
+
+            
+
+
             trans.Id = Guid.NewGuid().ToString();
             trans.Date = DateTime.UtcNow.Date;
             trans.DateTransaction = DateTime.UtcNow;

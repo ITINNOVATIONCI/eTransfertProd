@@ -358,18 +358,18 @@ Demo.init(); // init demo features
         <!-- END PAGE HEADER-->
         <!-- BEGIN DASHBOARD STATS -->
         <div class="row">
-            <div id="listediv" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div id="listediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                  @await Html.PartialAsync("_ViewListeUtilisateur")
             </div>
-            <div id="soldediv" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div id="soldediv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 @await Html.PartialAsync("_ViewSoldePrincipal")
             </div>
-            <div id="benefdiv" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div id="benefdiv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 @await Html.PartialAsync("_ViewBenefice")
             </div>
-            @*<div id="listeadmindiv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-               @await Html.PartialAsync("_ViewListeAdmin")
-            </div>*@
+            <div id="listeadmindiv" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+               @Html.Partial("_ViewListeAdmin")
+            </div>
         </div>
         <!-- END DASHBOARD STATS -->
         <div class="clearfix">

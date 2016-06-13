@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Claims;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.Http.Internal;
+using System.Threading.Tasks;
 
 namespace eTransfert.Controllers
 {
@@ -27,7 +29,7 @@ namespace eTransfert.Controllers
             compte = _context.Comptes.Where(c => c.Id == "1").FirstOrDefault();
             solde = compte.SoldeUnite;
             benef = _context.RechargeCptePrincTrace.Sum(s => s.Benef);
-            //GetListAdmin("ADMIN");
+           // GetListAdmin("ADMIN");
 
             moisTran = DateTime.UtcNow.Month;
             smoisTran = DateTime.UtcNow.ToString("MMMM");
@@ -42,7 +44,11 @@ namespace eTransfert.Controllers
         {
 
 
-            //GetListAdmin("ADMIN");
+            GetListAdmin("ADMIN");
+
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
             ViewBag.messageVIP = eTransfert.Services.ErrorMessage.message;
             
             return View(_context.RechargeCptePrincTrace.ToList());
@@ -177,6 +183,7 @@ namespace eTransfert.Controllers
         public IActionResult ListeUtilisateur()
         {
             GetListAdmin("ADMIN");
+
             ViewBag.total = total;
             ViewBag.solde = solde;
             ViewBag.benefice = benef;
@@ -249,10 +256,110 @@ namespace eTransfert.Controllers
         }
 
 
+        public IActionResult AjouterRole()
+        {
+
+            GetListAdmin("ADMIN");
+
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
+            return View();
+       
+           
+        }
+
+        public IActionResult ListeRole()
+        {
+            GetListAdmin("ADMIN");
+
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
+            var roles = _context.Roles.ToList();
+            return View(roles);
+
+
+
+        }
+
+        [HttpPost]
+        public IActionResult ValiderAjouterRole(string RoleName)
+        {
+            try
+            {
+                _context.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole()
+                {
+                    Name = RoleName.ToUpper()
+                });
+                _context.SaveChanges();
+                ViewBag.ResultMessage = "Role created successfully !";
+                return RedirectToAction("ListeRole");
+            }
+            catch
+            {
+                return View();
+            }
+
+
+        }
+
+
+
+        public ActionResult SupprimerRole(string RoleName)
+        {
+            var thisRole = _context.Roles.Where(r => r.Name.Equals(RoleName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            _context.Roles.Remove(thisRole);
+            _context.SaveChanges();
+            return RedirectToAction("ListeRole");
+        }
+
+
+        public ActionResult ModifierRole(string roleName)
+        {
+            GetListAdmin("ADMIN");
+
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
+            var thisRole = _context.Roles.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+
+            return View(thisRole);
+        }
+
+
+
+        // POST: /Roles/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ValiderModifierRole(Microsoft.AspNet.Identity.EntityFramework.IdentityRole role)
+        {
+            try
+            {
+                _context.Roles.Attach(role);
+                IdentityRole roles= _context.Roles.Where(r=>r.Id==role.Id).FirstOrDefault();
+
+                roles.Name = role.Name;
+               // _context.Entry(role).State = EntityState.Modified;
+               // _context.Entry<IdentityRole>(roles).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return RedirectToAction("ListeRole");
+            }
+            catch(Exception e)
+            {
+                return RedirectToAction("ListeRole");
+            }
+        }
+
 
         //[ActionName("TransfererUnite")]
         public IActionResult CreerRole(string id, string email,double mtseuil)
         {
+
+
+            
+
 
 
 
@@ -282,18 +389,25 @@ namespace eTransfert.Controllers
 
         public async void AddUserToRole(string userId, string roleName,double mtseuil)
         {
+
+
+
             //var UserManager = new UserManager<ApplicationUser>();
             // var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
 
             //var usermanager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            UserManager<ApplicationUser> userbManager = (UserManager<ApplicationUser>)HttpContext.ApplicationServices.GetService(typeof(UserManager<ApplicationUser>));
+            //UserManager<ApplicationUser> userbManager = (UserManager<ApplicationUser>)HttpContext.ApplicationServices.GetService(typeof(UserManager<ApplicationUser>));
             try
             {
-               IList<ApplicationUser> liste= await userbManager.GetUsersInRoleAsync("ADMIN");
+                //  IList<ApplicationUser> liste= await userbManager.GetUsersInRoleAsync("ADMIN");
 
-                ApplicationUser applicationUser =
-                   await userbManager.FindByIdAsync(userId);
-                
+                ApplicationUser applicationUser = new ApplicationUser();
+                // applicationUser=  await userbManager.FindByIdAsync(userId);
+                applicationUser = _context.Users.Where(c => c.Id == userId).FirstOrDefault();
+
+                UserManager<ApplicationUser> userbManager = (UserManager<ApplicationUser>)HttpContext.ApplicationServices.GetService(typeof(UserManager<ApplicationUser>));
+
+
                 await userbManager.AddToRoleAsync(applicationUser, roleName);
 
                 ApplicationUser currentUser = _context.Users.Where(c => c.Id == userId).FirstOrDefault();
@@ -315,28 +429,29 @@ namespace eTransfert.Controllers
 
 
 
-        public  async  void GetListAdmin(string roleName)
+        public  async void GetListAdmin(string roleName)
         {
             //var UserManager = new UserManager<ApplicationUser>();
             // var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
 
             //var usermanager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             UserManager<ApplicationUser> userbManager = (UserManager<ApplicationUser>)HttpContext.ApplicationServices.GetService(typeof(UserManager<ApplicationUser>));
+           
             try
             {
                 var liste = await  userbManager.GetUsersInRoleAsync(roleName);
-                ViewBag.lstadmin = liste;
-                int c = liste.Count;
                
+                ViewBag.lstadmin = liste.Count;
 
+               // return c;
                
             }
             catch (System.Exception e)
             {
-                throw;
+                ViewBag.lstadmin = 0;
             }
 
-
+           
 
         }
 
@@ -349,14 +464,15 @@ namespace eTransfert.Controllers
             currentUser.SeuilUnite = mtseuil;
             UserManager<ApplicationUser> userbManager = (UserManager<ApplicationUser>)HttpContext.ApplicationServices.GetService(typeof(UserManager<ApplicationUser>));
 
-            
+          //  ApplicationUser user = _context.Users.Where(u => u.Id.Equals(idUtilisateur, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            //var account = new AdminController();
+            userbManager.AddToRoleAsync(currentUser, roleName);
 
-            //_context.Users.Update(currentUser);
-            
-           // _context.SaveChanges();
 
-            AddUserToRole(idUtilisateur, roleName,mtseuil);
-            return RedirectToAction("LIsteUtilisateurRole");
+            // AddUserToRole(idUtilisateur, roleName,mtseuil);
+
+            //currentUser.SeuilUnite = mtseuil;
+            return RedirectToAction("ListeUtilisateurRole");
             
         }
 
@@ -407,7 +523,11 @@ namespace eTransfert.Controllers
 
         public IActionResult ListeUtilisateurPaiement()
         {
+            GetListAdmin("ADMIN");
 
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
             return View(_context.ApplicationUser.ToList());
         }
 
@@ -418,7 +538,7 @@ namespace eTransfert.Controllers
 
 
 
-            //GetListAdmin("ADMIN");
+            GetListAdmin("ADMIN");
             ViewBag.total = total;
             ViewBag.solde = solde;
             ViewBag.benefice = benef;
@@ -442,8 +562,13 @@ namespace eTransfert.Controllers
 
         public IActionResult ListeCustomTransaction(string dates)
         {
+            GetListAdmin("ADMIN");
 
-             List<Transactions> lstTrans;
+            ViewBag.total = total;
+            ViewBag.solde = solde;
+            ViewBag.benefice = benef;
+
+            List<Transactions> lstTrans;
             List<CustomTransaction> lstCustom = new List<CustomTransaction>();
 
             int mois = DateTime.UtcNow.Month;
@@ -545,6 +670,7 @@ namespace eTransfert.Controllers
                 cstrans.Email = currentUser.Email;
 
                 cstrans.DateTransaction = item.DateTransaction;
+                
                 cstrans.Id = item.Id;
                 cstrans.Montant = item.Montant;
                 cstrans.Numero = item.Numero;

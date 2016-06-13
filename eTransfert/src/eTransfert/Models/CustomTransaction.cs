@@ -12,6 +12,7 @@ namespace eTransfert.Models
         public string Id { get; set; }
         public string Idtrans { get; set; }
         public DateTime DateTransaction { get; set; }
+        //public DateTime DateCreation { get; set; }
         public string Numero { get; set; }
         public Double Montant { get; set; }
         public Double Pourcentage { get; set; }

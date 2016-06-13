@@ -152,34 +152,34 @@
 
     $('.k-update-button').on('submit', function (e) {
 
-        $('#btn').prop("disabled", true);
+       // $('#btn').prop("disabled", true);
 
-        alert("olivier");
+        //alert("olivier");
        
        
-        //var bla = $('#phone_number').val();
-        ////alert(bla);
-        //if (bla == null  || bla == "" || bla == undefined) {
+        var bla = $('#phone_number').val();
+        //alert(bla);
+        if (bla == null  || bla == "" || bla == undefined) {
 
 
-        //    $('.k-update-button').prop("disabled", false);
-        //}
-        //else {
-        //    e.preventDefault();//arrete submit normal
+            $('.k-update-button').prop("disabled", false);
+        }
+        else {
+            e.preventDefault();//arrete submit normal
 
 
 
-        //    $('.k-update-button').prop("disabled", true);
-        //    Metronic.startPageLoading({ animate: true });
-        //    //foo();
-        //    //alert("olivier before");
-        //    submitdata();
-        //    //alert("olivier after");
+            $('.k-update-button').prop("disabled", true);
+            Metronic.startPageLoading({ animate: true });
+            //foo();
+            //alert("olivier before");
+            submitdata();
+            //alert("olivier after");
 
-        //    //window.setTimeout(function () {
-        //    //    Metronic.stopPageLoading();
-        //    //}, 2000);
-        //}
+            //window.setTimeout(function () {
+            //    Metronic.stopPageLoading();
+            //}, 2000);
+        }
 
 
     });
